@@ -19,7 +19,8 @@ let arrayofCards = [
     "fa fa-bicycle",
     "fa fa-bomb"
 ];
-    
+
+let numOfClicks = 0;
 
 
 /*
@@ -47,13 +48,33 @@ function shuffle(array) {
 function resetDeck() {
     intiateCardShuffle();
     createDeck();
+    resetNumClicks();
 }
 
 function intiateCardShuffle() {
     shuffle(arrayofCards);
 }
 
+function resetNumClicks() {
+    numOfClicks = 0;
+    updateHTMLNumberMessage();
+}
+function updateHTMLNumberMessage() {
+      
+    moves = document.getElementsByClassName('moves')[0];
+    while (moves.firstChild) {
+        moves.removeChild(moves.firstChild);
+      }
+      moves.appendChild(document.createTextNode(numOfClicks));  
+}
+
+function incremenetNumClick() {
+    numOfClicks = numOfClicks + 1;
+    updateHTMLNumberMessage();
+}
+
 function createDeck() {
+    resetNumClicks();
     deck = document.getElementsByClassName('deck')[0];
 
     while (deck.firstChild) {
@@ -66,14 +87,16 @@ function createDeck() {
         let card = document.createElement('li');
         card.className = 'card';
         card.classList.add('match');
-        //card.addEventListener('click',delegateCardClickBehavior());
+        card.addEventListener('click',delegateCardClickBehavior);
         deck.appendChild(card);
 
         let cardPicture = document.createElement('i');
         cardPicture.className = arrayofCards[i];
-        //card.addEventListener('click',delegateCardClickBehavior());
+        //cardPicture.addEventListener('click',delegateCardClickBehavior());
         card.appendChild(cardPicture);
 
+
+        resetNumClicks();
         // TODO: add event listener
 
        
@@ -89,7 +112,7 @@ function cardMatchTurn() {
 
 function delegateCardClickBehavior() {
    //set rules for what a card should do
-   
+   incremenetNumClick();
 
 }
 
