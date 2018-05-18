@@ -1,6 +1,17 @@
 /*
  * Create a list that holds all of your cards
  */
+let arrayofCards = [
+    "fa fa-diamond",
+    "fa fa-paper-plane-o",
+    "fa fa-anchor",
+    "fa fa-bolt",
+    "fa fa-cube",
+    "fa fa-leaf",
+    "fa fa-bicycle",
+    "fa fa-bomb"
+];
+    
 
 
 /*
@@ -25,6 +36,18 @@ function shuffle(array) {
     return array;
 }
 
+function intiateCardShuffle() {
+    shuffle(arrayofCards);
+}
+
+function cardMatchTurn() {
+    
+    target = event.target;
+
+    console.log(target.className);
+    $("#card").flip();
+    
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:

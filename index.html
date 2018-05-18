@@ -25,7 +25,7 @@
         	<span class="moves">3</span> Moves
 
             <div class="restart">
-        		<i class="fa fa-repeat"></i>
+        		<i class="fa fa-repeat" onclick="intiateCardShuffle()"></i>
         	</div>
         </section>
 
@@ -36,8 +36,8 @@
             <li class="card">
                 <i class="fa fa-paper-plane-o"></i>
             </li>
-            <li class="card match">
-                <i class="fa fa-anchor"></i>
+            <li class="card match" >
+                <i class="fa fa-anchor" onclick="cardMatchTurn()"></i>
             </li>
             <li class="card">
                 <i class="fa fa-bolt"></i>
@@ -45,8 +45,8 @@
             <li class="card">
                 <i class="fa fa-cube"></i>
             </li>
-            <li class="card match">
-                <i class="fa fa-anchor"></i>
+            <li class="card match" >
+                <i class="fa fa-anchor" onclick="cardMatchTurn()"></i>
             </li>
             <li class="card">
                 <i class="fa fa-leaf"></i>
@@ -82,5 +82,7 @@
     </div>
 
     <script src="js/app.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js">
+     <script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js">
 </body>
 </html>
