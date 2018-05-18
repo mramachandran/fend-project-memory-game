@@ -9,6 +9,14 @@ let arrayofCards = [
     "fa fa-cube",
     "fa fa-leaf",
     "fa fa-bicycle",
+    "fa fa-bomb",
+    "fa fa-diamond",
+    "fa fa-paper-plane-o",
+    "fa fa-anchor",
+    "fa fa-bolt",
+    "fa fa-cube",
+    "fa fa-leaf",
+    "fa fa-bicycle",
     "fa fa-bomb"
 ];
     
@@ -36,17 +44,53 @@ function shuffle(array) {
     return array;
 }
 
+function resetDeck() {
+    intiateCardShuffle();
+    createDeck();
+}
+
 function intiateCardShuffle() {
     shuffle(arrayofCards);
 }
 
-function cardMatchTurn() {
-    
-    target = event.target;
+function createDeck() {
+    deck = document.getElementsByClassName('deck')[0];
 
+    while (deck.firstChild) {
+        deck.removeChild(deck.firstChild);
+      }
+
+    for(i=0;i<arrayofCards.length;i++) {
+        
+        
+        let card = document.createElement('li');
+        card.className = 'card';
+        card.classList.add('match');
+        //card.addEventListener('click',delegateCardClickBehavior());
+        deck.appendChild(card);
+
+        let cardPicture = document.createElement('i');
+        cardPicture.className = arrayofCards[i];
+        //card.addEventListener('click',delegateCardClickBehavior());
+        card.appendChild(cardPicture);
+
+        // TODO: add event listener
+
+       
+    }
+}
+
+function cardMatchTurn() {
+    target = event.target;
     console.log(target.className);
     $("#card").flip();
     
+}
+
+function delegateCardClickBehavior() {
+   //set rules for what a card should do
+   
+
 }
 
 /*
