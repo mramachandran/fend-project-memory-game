@@ -73,12 +73,23 @@ h1 {
 
 .deck .card.show {
     font-size: 33px;
+    animation: shake 0.5s; 
+    animation-iteration-count: 3; 
 }
 
 .deck .card.match {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
+    animation: shake 0.5s; 
+    animation-iteration-count: 3; 
+}
+
+.deck .card.close {
+    cursor: default;
+    background:#FF4500;
+    font-size: 33px;
+    animation: shake 0.5s; 
 }
 
 /*

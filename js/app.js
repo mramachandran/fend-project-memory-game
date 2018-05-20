@@ -90,7 +90,6 @@ function createDeck() {
 
     for(i=0;i<arrayofCards.length;i++) {
         
-        
         let card = document.createElement('li');
         card.classList.add('card');
         //card.classList.add('open');
@@ -102,11 +101,9 @@ function createDeck() {
         //cardPicture.addEventListener("click",delegateCardClickBehavior,true);
         card.appendChild(cardPicture);
 
-
         resetNumClicks();
         // TODO: add event listener
 
-       
     }
 }
 
@@ -134,8 +131,6 @@ function delegateCardClickBehavior(event) {
        firstClickClass = cardPictureClassList;
        firstTarget = target;
        console.log(firstClickClass);
-
-    
    }else {
        secondClickClass = cardPictureClassList;
        secondTarget = target;
@@ -180,7 +175,12 @@ function delegateCardClickBehavior(event) {
         firstCard.classList.remove('show');
         secondCard.classList.remove('show');
        }, 500);
+
+      
+
    }
+
+  
    
    
 
