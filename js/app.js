@@ -26,6 +26,8 @@ let totalNumOfMatch = 0;
 
 let firstClickClass  = "";
 let secondClickClass = "";
+let firstTarget = "";
+let secondTarget = "";
 
 
 /*
@@ -90,14 +92,14 @@ function createDeck() {
         
         
         let card = document.createElement('li');
-        card.className = 'card';
-        card.classList.add('match');
-        //card.addEventListener('click',delegateCardClickBehavior);
+        card.classList.add('card');
+        //card.classList.add('open');
+        card.addEventListener("click",delegateCardClickBehavior,false);
         deck.appendChild(card);
 
         let cardPicture = document.createElement('i');
         cardPicture.className = arrayofCards[i];
-        cardPicture.addEventListener('click',delegateCardClickBehavior,true);
+        //cardPicture.addEventListener("click",delegateCardClickBehavior,true);
         card.appendChild(cardPicture);
 
 
@@ -119,54 +121,69 @@ function delegateCardClickBehavior(event) {
    //set rules for what a card should do
    //TODO: can't click on the 'match' card for second time 
    incremenetNumClick();
+
    target = event.target;
+   target.classList.add('show');
    console.log(target.classList);
+
+   console.log(target.firstChild.classList[1]);
+
+   cardPictureClassList = target.firstChild.classList[1];
+
    if (firstClickClass.length === 0) {
-       firstClickClass = target.classList[1];
+       firstClickClass = cardPictureClassList;
+       firstTarget = target;
        console.log(firstClickClass);
+
+    
    }else {
-       secondClickClass = target.classList[1];
+       secondClickClass = cardPictureClassList;
+       secondTarget = target;
+       console.log(secondClickClass);
 
-       if (firstClickClass === secondClickClass) {
+       if (firstClickClass === secondClickClass && firstTarget != secondTarget) {
         //user guessed correctly
-        updateClickedClassStatusToGuessed(firstClickClass,secondClickClass);
-        //selectedCards = document.getElementsByClassName(firstClickClass);
-
-        selectedCard = document.getElementsByClassName(firstClickClass);
-        console.log(selectedCard.length);
-        
-        for(c=0;c<selectedCard.length;c++){
-            console.log(selectedCard[c].parentNode);
-            selectedCard[c].parentNode.classList.remove("match");
-          }
-
+        updateClickedClassStatusToMatch(firstTarget,secondTarget);
         console.log("correct guess");
         } else {
         //user guessed incorrectly
-        updateClickedClassStatusToIncorrectlyGuessed(firstClickClass,secondClickClass);
+        updateClickedClassStatusToIncorrectlyGuessed(firstTarget,secondTarget);
         console.log("incorrect guess");
        }
 
        firstClickClass = "";
        secondClickClass = "";
-   }
+       
+     }
+    }
 
 
-   function updateClickedClassStatusToGuessed(firstCard, secondCard) {
+   function updateClickedClassStatusToMatch(firstCard, secondCard) {
         //change the correctly guessed cards to 'match' so they always show up
         totalNumOfMatch++;
+        console.log("match");
+        firstCard.classList.remove("open");
+        firstCard.classList.add("match");
+
+        secondCard.classList.remove("open");
+        secondCard.classList.add("match");
         if(totalNumOfMatch === totalNumOfCards/2) {
-            alert("Congratulations!. You have successfully matched all the cards.");
-            resetDeck();
+            conole.log("Congratulations!. You have successfully matched all the cards.");
+            //resetDeck();
         }
+
    }
 
    function updateClickedClassStatusToIncorrectlyGuessed(firstCard, secondCard) {
        //change the incorrectly guessed cards to not have 'match' so they go back to hide
+       setTimeout(function cardClose() {
+        firstCard.classList.remove('show');
+        secondCard.classList.remove('show');
+       }, 500);
    }
    
    
-}
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
