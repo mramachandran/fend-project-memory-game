@@ -82,6 +82,7 @@ function incremenetNumClick() {
 
 function createDeck() {
     resetNumClicks();
+
     deck = document.getElementsByClassName('deck')[0];
     
     while (deck.firstChild) {
@@ -117,9 +118,13 @@ function cardMatchTurn() {
 function delegateCardClickBehavior(event) {
    //set rules for what a card should do
    //TODO: can't click on the 'match' card for second time 
-   incremenetNumClick();
+   
 
    target = event.target;
+   if(target.classList.contains('show') || target.classList.contains('match') ) {
+        console.log('no action will be done')   
+        return; //do not do any event if the card is already opened
+   }
    target.classList.add('show');
    console.log(target.classList);
 
@@ -131,23 +136,26 @@ function delegateCardClickBehavior(event) {
        firstClickClass = cardPictureClassList;
        firstTarget = target;
        console.log(firstClickClass);
+       incremenetNumClick();
    }else {
        secondClickClass = cardPictureClassList;
        secondTarget = target;
        console.log(secondClickClass);
 
-       if (firstClickClass === secondClickClass && firstTarget != secondTarget) {
-        //user guessed correctly
-        updateClickedClassStatusToMatch(firstTarget,secondTarget);
-        console.log("correct guess");
-        } else {
-        //user guessed incorrectly
-        updateClickedClassStatusToIncorrectlyGuessed(firstTarget,secondTarget);
-        console.log("incorrect guess");
+       if(firstTarget != secondTarget) {
+          incremenetNumClick();
+          if (firstClickClass === secondClickClass) {
+            //user guessed correctly
+            updateClickedClassStatusToMatch(firstTarget,secondTarget);
+            console.log("correct guess");
+            } else {
+            //user guessed incorrectly
+            updateClickedClassStatusToIncorrectlyGuessed(firstTarget,secondTarget);
+            console.log("incorrect guess");
+            }
        }
-
-       firstClickClass = "";
-       secondClickClass = "";
+        firstClickClass = "";
+        secondClickClass = "";
        
      }
     }
@@ -180,7 +188,10 @@ function delegateCardClickBehavior(event) {
 
    }
 
-  
+   document.addEventListener('DOMContentLoaded', function () {
+    console.log('the DOM is ready to be interacted with!');
+    createDeck();
+   });
    
    
 
