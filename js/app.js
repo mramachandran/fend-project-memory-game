@@ -94,7 +94,7 @@ function createDeck() {
         let card = document.createElement('li');
         card.classList.add('card');
         //card.classList.add('open');
-        card.addEventListener("click",delegateCardClickBehavior,false);
+        card.addEventListener("click",delegateCardClickBehavior,true);
         deck.appendChild(card);
 
         let cardPicture = document.createElement('i');
@@ -171,7 +171,7 @@ function delegateCardClickBehavior(event) {
         secondCard.classList.remove("open");
         secondCard.classList.add("match");
         if(totalNumOfMatch === totalNumOfCards/2) {
-            conole.log("Congratulations!. You have successfully matched all the cards.");
+            console.log("Congratulations!. You have successfully matched all the cards.");
             //resetDeck();
         }
 
