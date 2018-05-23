@@ -29,7 +29,7 @@ let secondClickClass = "";
 let firstTarget = "";
 let secondTarget = "";
 
-
+let openCards = [];
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -94,7 +94,9 @@ function createDeck() {
         let card = document.createElement('li');
         card.classList.add('card');
         //card.classList.add('open');
-        card.addEventListener("click",delegateCardClickBehavior,true);
+        card.addEventListener("click",delegateCardClickBehavior,false); //event capture at capture phase
+        //https://www.quirksmode.org/js/events_order.html#link4
+
         deck.appendChild(card);
 
         let cardPicture = document.createElement('i');
@@ -116,12 +118,52 @@ function cardMatchTurn() {
 }
 
 function delegateCardClickBehavior(event) {
+
+  if(!event.target.classList.contains('card')) return;
+  incremenetNumClick();
+   openCards.push(event.target);
+   event.target.classList.toggle('show');
+   //console.log(event.target.classList);
+
+   if(openCards.length == 2) {
+    console.log(openCards[0].classList);
+    console.log(openCards[1].classList);
+     
+     if(doesCardsMatch(openCards[0],openCards[1])) {      
+        openCards[0].classList.toggle('show');
+        openCards[1].classList.toggle('show');
+        openCards[0].classList.toggle('match');
+        openCards[1].classList.toggle('match');   
+        openCards = [];     
+     }
+     else {
+        setTimeout(function cardClose() {
+        openCards[0].classList.toggle('show'); //remove show
+        openCards[1].classList.toggle('show');
+        openCards[0].classList.toggle('close'); 
+        openCards[1].classList.toggle('close'); 
+        openCards = [];       
+       }, 500);
+       openCards[0].classList.toggle('close'); 
+       openCards[1].classList.toggle('close');
+     }
+     
+    }
+}
+
+function doesCardsMatch(card1,card2) {
+    return card1.firstChild.classList[1]===card2.firstChild.classList[1];
+}
+
+function delegateCardClickBehavior2(event) {
    //set rules for what a card should do
    //TODO: can't click on the 'match' card for second time 
    
 
    target = event.target;
-   if(target.classList.contains('show') || target.classList.contains('match') ) {
+   console.log(target.classList);
+   
+   if(target.classList.contains('show') || target.classList.contains('match') || !target.classList.contains('card')) {
         console.log('no action will be done')   
         return; //do not do any event if the card is already opened
    }
@@ -192,8 +234,6 @@ function delegateCardClickBehavior(event) {
     console.log('the DOM is ready to be interacted with!');
     createDeck();
    });
-   
-   
 
 
 /*
