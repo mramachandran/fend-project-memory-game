@@ -23,13 +23,20 @@ let arrayofCards = [
 let numOfClicks = 0;
 let totalNumOfCards = 16;
 let totalNumOfMatch = 0;
-
 let firstClickClass  = "";
 let secondClickClass = "";
 let firstTarget = "";
 let secondTarget = "";
-
 let openCards = [];
+
+let vTimer = "";
+let minutes = 0;
+let seconds = 0;
+let time = 0;   
+let stopTime = 0;
+let timerIncrementHandle = 0;
+let resetTime = 0;
+
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -56,6 +63,8 @@ function resetDeck() {
     intiateCardShuffle();
     createDeck();
     resetNumClicks();
+    stopTimer();
+    //startTimer();
 }
 
 function intiateCardShuffle() {
@@ -73,6 +82,74 @@ function updateHTMLNumberMessage() {
         moves.removeChild(moves.firstChild);
       }
       moves.appendChild(document.createTextNode(numOfClicks));  
+}
+
+function startTimer() {
+    
+    
+    //vTimer = "hello";
+    let score = document.getElementsByClassName('score-panel')[0];
+    let span = document.getElementsByClassName('timer')[0];
+
+    if (span == null)  {
+        timer = document.createElement('span');
+        timer.classList.add('timer')
+        
+        timer.appendChild(document.createTextNode(vTimer));
+        score.appendChild(timer)
+    } else {
+        span.innerHTML = vTimer;
+    }
+
+    //console.log(timerIncrementHandle);
+
+    //clearTimeout(timerIncrementHandle);
+    let stopTime = 0;
+
+    //if (resetTime == 0) 
+        updateTimer(); //make sure to update timer every one second
+    //otherwise, the clock is already ticking
+    
+}
+
+function stopTimer() {
+    let stopTime = 1;
+}
+
+function updateTimer() {
+
+   if (stopTime == 1) return; 
+
+    let timerIncrementHandle = setTimeout(function(){
+        seconds++;
+        if(seconds%60==0 & seconds > 0) {
+            seconds = 0
+            minutes = minutes + 1;
+        }
+
+        //let seconds = Math.floor(time/100);
+
+        console.log(seconds);
+
+        let span = document.getElementsByClassName('timer')[0];
+        let secondFormatter =  ("0" + seconds).slice(-2);
+        let minuteFormatter =  ("0" + minutes).slice(-2);
+        //credit https://stackoverflow.com/questions/8043026/how-to-format-numbers-by-prepending-0-to-single-digit-numbers
+         
+        vTimer = minuteFormatter + ":" + secondFormatter;
+        span.innerHTML = vTimer;
+        updateTimer();  
+    }
+    ,1000);
+}
+
+function resetTimer() {
+
+    let stopTime = 1;
+    let resetTime = 1;
+    seconds = 0;
+    minutes = 0;
+    vTimer = "00" + ":" + "00";
 }
 
 function incremenetNumClick() {
@@ -117,10 +194,17 @@ function cardMatchTurn() {
     
 }
 
+function isFirstTimeClick()
+{
+    return numOfClicks;
+}
 function delegateCardClickBehavior(event) {
 
+  //  congratulateUser();
   if(!event.target.classList.contains('card')) return;
   incremenetNumClick();
+  if(isFirstTimeClick() == 1) startTimer();
+
    openCards.push(event.target);
    event.target.classList.toggle('show');
    //console.log(event.target.classList);
@@ -130,78 +214,64 @@ function delegateCardClickBehavior(event) {
     console.log(openCards[1].classList);
      
      if(doesCardsMatch(openCards[0],openCards[1])) {      
-        openCards[0].classList.toggle('show');
-        openCards[1].classList.toggle('show');
-        openCards[0].classList.toggle('match');
-        openCards[1].classList.toggle('match');   
-        openCards = [];     
+        openCards[0].classList.remove('show');
+        openCards[1].classList.remove('show');
+        openCards[0].classList.add('match');
+        openCards[1].classList.add('match');  
+        
+        totalNumOfMatch++;
+        openCards = [];    
+        
+        if(totalNumOfMatch === totalNumOfCards/2) {
+            console.log("Congratulations!. You have successfully matched all the cards.");
+            congratulateUser();
+            //resetDeck();
+        }
+        
      }
      else {
         setTimeout(function cardClose() {
-        openCards[0].classList.toggle('show'); //remove show
-        openCards[1].classList.toggle('show');
-        openCards[0].classList.toggle('close'); 
-        openCards[1].classList.toggle('close'); 
+        openCards[0].classList.remove('show'); //remove show
+        openCards[1].classList.remove('show');
+        openCards[0].classList.remove('close'); 
+        openCards[1].classList.remove('close'); 
         openCards = [];       
        }, 500);
-       openCards[0].classList.toggle('close'); 
-       openCards[1].classList.toggle('close');
+       openCards[0].classList.add('close'); 
+       openCards[1].classList.add('close');
      }
      
     }
 }
 
-function doesCardsMatch(card1,card2) {
-    return card1.firstChild.classList[1]===card2.firstChild.classList[1];
+function congratulateUser() {
+
+    //create section for modal
+    stopTime = 1;
+    let modalDiv = document.createElement('div');
+    modalDiv.classList.add('modal');
+    document.appendChild(modalDiv);
+    
+    //Modal content 
+    let modalDivContent = document.createElement('div');
+    modalDivContent.classList.add('modal-content');
+    modalDiv.appendChild(modalDivContent);
+
+    // Get the modal
+    var modal = document.getElementById('modal');
+    modal.style.display = "block";
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 }
 
-function delegateCardClickBehavior2(event) {
-   //set rules for what a card should do
-   //TODO: can't click on the 'match' card for second time 
-   
-
-   target = event.target;
-   console.log(target.classList);
-   
-   if(target.classList.contains('show') || target.classList.contains('match') || !target.classList.contains('card')) {
-        console.log('no action will be done')   
-        return; //do not do any event if the card is already opened
-   }
-   target.classList.add('show');
-   console.log(target.classList);
-
-   console.log(target.firstChild.classList[1]);
-
-   cardPictureClassList = target.firstChild.classList[1];
-
-   if (firstClickClass.length === 0) {
-       firstClickClass = cardPictureClassList;
-       firstTarget = target;
-       console.log(firstClickClass);
-       incremenetNumClick();
-   }else {
-       secondClickClass = cardPictureClassList;
-       secondTarget = target;
-       console.log(secondClickClass);
-
-       if(firstTarget != secondTarget) {
-          incremenetNumClick();
-          if (firstClickClass === secondClickClass) {
-            //user guessed correctly
-            updateClickedClassStatusToMatch(firstTarget,secondTarget);
-            console.log("correct guess");
-            } else {
-            //user guessed incorrectly
-            updateClickedClassStatusToIncorrectlyGuessed(firstTarget,secondTarget);
-            console.log("incorrect guess");
-            }
-       }
-        firstClickClass = "";
-        secondClickClass = "";
-       
-     }
+    function doesCardsMatch(card1,card2) {
+        return card1.firstChild.classList[1]===card2.firstChild.classList[1];
     }
-
 
    function updateClickedClassStatusToMatch(firstCard, secondCard) {
         //change the correctly guessed cards to 'match' so they always show up
@@ -232,9 +302,10 @@ function delegateCardClickBehavior2(event) {
 
    document.addEventListener('DOMContentLoaded', function () {
     console.log('the DOM is ready to be interacted with!');
-    createDeck();
+    createDeck(); 
    });
 
+   
 
 /*
  * set up the event listener for a card. If a card is clicked:
