@@ -60,11 +60,12 @@ function shuffle(array) {
 }
 
 function resetDeck() {
+    stopTime = 1;
     intiateCardShuffle();
     createDeck();
     resetNumClicks();
     stopTimer();
-    //startTimer();
+    resetTimer();
 }
 
 function intiateCardShuffle() {
@@ -88,6 +89,7 @@ function startTimer() {
     
     
     //vTimer = "hello";
+    console.log("starting timer");
     let score = document.getElementsByClassName('score-panel')[0];
     let span = document.getElementsByClassName('timer')[0];
 
@@ -104,23 +106,29 @@ function startTimer() {
     //console.log(timerIncrementHandle);
 
     //clearTimeout(timerIncrementHandle);
-    let stopTime = 0;
+    stopTime = 0;
 
     //if (resetTime == 0) 
-        updateTimer(); //make sure to update timer every one second
+    updateTimer(); //make sure to update timer every one second
     //otherwise, the clock is already ticking
     
 }
 
 function stopTimer() {
-    let stopTime = 1;
+    stopTime = 1;
 }
 
 function updateTimer() {
 
-   if (stopTime == 1) return; 
-
-    let timerIncrementHandle = setTimeout(function(){
+   console.log("updating timer " + stopTime);
+   if (stopTime == 1) {
+       resetTimer();  
+       return;
+   }
+       
+    
+    
+    timerIncrementHandle = setTimeout(function(){
         seconds++;
         if(seconds%60==0 & seconds > 0) {
             seconds = 0
@@ -139,21 +147,23 @@ function updateTimer() {
         vTimer = minuteFormatter + ":" + secondFormatter;
         span.innerHTML = vTimer;
         updateTimer();  
+        updatePlayerRanking();
     }
     ,1000);
 }
 
 function resetTimer() {
 
-    let stopTime = 1;
-    let resetTime = 1;
+    stopTime = 1;
+    resetTime = 1;
     seconds = 0;
     minutes = 0;
     vTimer = "00" + ":" + "00";
 }
 
-function incremenetNumClick() {
+function incrementNumClick() {
     numOfClicks = numOfClicks + 1;
+    console.log("num of clicks = " + numOfClicks);
     updateHTMLNumberMessage();
 }
 
@@ -194,17 +204,40 @@ function cardMatchTurn() {
     
 }
 
-function isFirstTimeClick()
+function getNumClicks()
 {
     return numOfClicks;
 }
+
+function getTimeElapsedInSeconds() {
+  return minutes*60+seconds;
+}
+
+function updatePlayerRanking () {
+    //remove a star if the player is taking more than 40 seconds
+    console.log("updating stars..." + getTimeElapsedInSeconds());
+    if (getTimeElapsedInSeconds()%40 == 0 & getTimeElapsedInSeconds() >0) {
+        let stars = document.getElementsByClassName('stars')[0];
+        console.log(stars)
+        if (stars.hasChildNodes()) {
+            stars.removeChild(stars.firstChild)
+            console.log("removing star ............");
+        }
+        console.log(stars)
+    }
+  
+}
+
+
 function delegateCardClickBehavior(event) {
 
   //  congratulateUser();
   if(!event.target.classList.contains('card')) return;
-  incremenetNumClick();
-  if(isFirstTimeClick() == 1) startTimer();
+  incrementNumClick();
 
+  if(getNumClicks() == 1) startTimer();
+ 
+     
    openCards.push(event.target);
    event.target.classList.toggle('show');
    //console.log(event.target.classList);
@@ -221,6 +254,8 @@ function delegateCardClickBehavior(event) {
         
         totalNumOfMatch++;
         openCards = [];    
+
+        
         
         if(totalNumOfMatch === totalNumOfCards/2) {
             console.log("Congratulations!. You have successfully matched all the cards.");
