@@ -282,7 +282,9 @@ function delegateCardClickBehavior(event) {
 function congratulateUser() {
 
     //create section for modal
+    alert("you got it!")
     stopTime = 1;
+    /*
     let modalDiv = document.createElement('div');
     modalDiv.classList.add('modal');
     document.appendChild(modalDiv);
@@ -301,7 +303,9 @@ function congratulateUser() {
         if (event.target == modal) {
             modal.style.display = "none";
         }
+        
     }
+    */
 }
 
     function doesCardsMatch(card1,card2) {
@@ -320,6 +324,10 @@ function congratulateUser() {
         if(totalNumOfMatch === totalNumOfCards/2) {
             console.log("Congratulations!. You have successfully matched all the cards.");
             //resetDeck();
+            alert("I want this to appear after the modal has opened!");
+            $('#code').on('shown.bs.modal', function (e) {
+                alert("I want this to appear after the modal has opened!");
+              })
         }
 
    }
@@ -340,7 +348,7 @@ function congratulateUser() {
     createDeck(); 
    });
 
-   
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
