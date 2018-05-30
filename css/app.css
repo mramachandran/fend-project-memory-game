@@ -84,8 +84,6 @@ h1 {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
-    animation: shake 0.5s; 
-    animation-iteration-count: 3; 
 }
 
 .deck .card.close {
@@ -96,7 +94,7 @@ h1 {
     /* Start the shake animation and make the animation last for 0.5 seconds */
     animation: shake 0.5s; 
     /* When the animation is finished, start again */
-    animation-iteration-count: 2; 
+    animation-iteration-count: 1; 
 }
 
 @keyframes shake {
