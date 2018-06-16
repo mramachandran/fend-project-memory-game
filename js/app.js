@@ -63,9 +63,14 @@ function resetDeck() {
     stopTime = 1;
     intiateCardShuffle();
     createDeck();
-    resetNumClicks();
     stopTimer();
-    resetTimer();
+    //updatePlayerRanking(5);
+    //setTimeOut(resetTimer(),1000);
+}
+
+function resetClick() {
+    resetNumClicks();
+    updateHTMLNumberMessage();
 }
 
 function intiateCardShuffle() {
@@ -74,7 +79,7 @@ function intiateCardShuffle() {
 
 function resetNumClicks() {
     numOfClicks = 0;
-    updateHTMLNumberMessage();
+    
 }
 function updateHTMLNumberMessage() {
       
@@ -103,12 +108,9 @@ function startTimer() {
         span.innerHTML = vTimer;
     }
 
-    //console.log(timerIncrementHandle);
 
-    //clearTimeout(timerIncrementHandle);
     stopTime = 0;
 
-    //if (resetTime == 0) 
     updateTimer(); //make sure to update timer every one second
     //otherwise, the clock is already ticking
     
@@ -147,7 +149,7 @@ function updateTimer() {
         vTimer = minuteFormatter + ":" + secondFormatter;
         span.innerHTML = vTimer;
         updateTimer();  
-        updatePlayerRanking();
+        updatePlayerRanking(40); //remove starts if players take more than 40 seconds to complete
     }
     ,1000);
 }
@@ -168,7 +170,7 @@ function incrementNumClick() {
 }
 
 function createDeck() {
-    resetNumClicks();
+    resetClick();
 
     deck = document.getElementsByClassName('deck')[0];
     
@@ -191,7 +193,7 @@ function createDeck() {
         //cardPicture.addEventListener("click",delegateCardClickBehavior,true);
         card.appendChild(cardPicture);
 
-        resetNumClicks();
+        resetClick();
         // TODO: add event listener
 
     }
@@ -213,20 +215,36 @@ function getTimeElapsedInSeconds() {
   return minutes*60+seconds;
 }
 
-function updatePlayerRanking () {
+function updatePlayerRanking (removeStarAfterNSeconds) {
     //remove a star if the player is taking more than 40 seconds
-    console.log("updating stars..." + getTimeElapsedInSeconds());
-    if (getTimeElapsedInSeconds()%40 == 0 & getTimeElapsedInSeconds() >0) {
-        let stars = document.getElementsByClassName('stars')[0];
-        console.log(stars)
-        if (stars.hasChildNodes()) {
-            stars.removeChild(stars.firstChild)
-            console.log("removing star ............");
-        }
-        console.log(stars)
+
+    //moves = document.getElementsByClassName('moves')[0];
+    //while (moves.firstChild) {
+        //moves.removeChild(moves.firstChild);
+      //}
+      //moves.appendChild(document.createTextNode(numOfClicks));  
+
+    timeElapsed = getTimeElapsedInSeconds()
+    console.log("updating stars @ second ..." + timeElapsed);
+    console.log("will remove stars after " + removeStarAfterNSeconds)
+    console.log()
+
+    if (timeElapsed >= removeStarAfterNSeconds && timeElapsed%removeStarAfterNSeconds == 0 )
+    {
+        console.log("about to remove starts")
+        removeElementsByClass('fa fa-star')
     }
-  
+        
+
 }
+
+function removeElementsByClass(className){
+    var elements = document.getElementsByClassName(className);
+    if (elements.length > 0)
+    console.log(elements[0].remove())
+}
+  
+
 
 
 function delegateCardClickBehavior(event) {
@@ -260,7 +278,6 @@ function delegateCardClickBehavior(event) {
         if(totalNumOfMatch === totalNumOfCards/2) {
             console.log("Congratulations!. You have successfully matched all the cards.");
             congratulateUser();
-            //resetDeck();
         }
         
      }
