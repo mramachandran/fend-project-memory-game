@@ -79,6 +79,7 @@ function resetVariables() {
 }
 
 
+
 function resetDeck() {
     stopTimer();
     //intiateCardShuffle();
@@ -105,6 +106,8 @@ function resetNumClicks() {
     numOfClicks = 0;
     
 }
+
+//This function updates the number of mvoes on the HTML page
 function updateHTMLNumberMessage() {
       
     moves = document.getElementsByClassName('moves')[0];
@@ -114,6 +117,7 @@ function updateHTMLNumberMessage() {
       moves.appendChild(document.createTextNode(numOfClicks));  
 }
 
+//starts the timer and updates it every second
 function startTimer() {
     //vTimer = "hello";
     console.log("starting timer");
@@ -129,19 +133,17 @@ function startTimer() {
     } else {
         span.innerHTML = vTimer;
     }
-
-
     stopTime = 0;
-
     updateTimer(); //make sure to update timer every one second
-    //otherwise, the clock is already ticking
-    
 }
 
+//stops the timer by setting stopTime variable to 1. We
+//don't update the clock when the timer is stopped
 function stopTimer() {
     stopTime = 1;
 }
 
+//updates timer every one second
 function updateTimer() {
 
    console.log("updating timer " + stopTime);
@@ -174,8 +176,8 @@ function updateTimer() {
     ,1000);
 }
 
+//a simple function to change the timer to 00:00 for hh:mm
 function resetTimer() {
-
     stopTime = 1;
     resetTime = 1;
     seconds = 0;
@@ -185,12 +187,14 @@ function resetTimer() {
     span.innerHTML = vTimer;
 }
 
+//increments number of clicks as number of moves made by user
 function incrementNumClick() {
     numOfClicks = numOfClicks + 1;
     console.log("num of clicks = " + numOfClicks);
     updateHTMLNumberMessage();
 }
 
+//this is the function that creates the deck and links the 'click' behavior
 function createDeck() {
     resetClick();
 
@@ -221,30 +225,21 @@ function createDeck() {
     }
 }
 
-function cardMatchTurn() {
-    target = event.target;
-    console.log(target.className);
-    $("#card").flip();
-    
-}
 
+//helper function: returns number of moves made by user
 function getNumClicks()
 {
     return numOfClicks;
 }
 
+//helper function: returns time taken by user in seconds
 function getTimeElapsedInSeconds() {
   return minutes*60+seconds;
 }
 
+//Stars Ranking: Users lose a star if time taken exceeds 40 seconds and then at 80 seconds
 function updatePlayerRanking (removeStarAfterNSeconds) {
     //remove a star if the player is taking more than 40 seconds
-
-    //moves = document.getElementsByClassName('moves')[0];
-    //while (moves.firstChild) {
-        //moves.removeChild(moves.firstChild);
-      //}
-      //moves.appendChild(document.createTextNode(numOfClicks));  
 
     timeElapsed = getTimeElapsedInSeconds()
     console.log("updating stars @ second ..." + timeElapsed);
@@ -260,12 +255,14 @@ function updatePlayerRanking (removeStarAfterNSeconds) {
 
 }
 
+//helper function to remove a class
 function removeElementsByClass(className){
     var elements = document.getElementsByClassName(className);
     if (elements.length > 1) //do not remove the last star
         elements[0].remove()
 }
 
+//when reset and if the previous session had lost some stars, resetting the game sets the number of stars back to 3
 function addElementsByClass(className){
 
     let starPicture = document.createElement('i');
@@ -274,7 +271,6 @@ function addElementsByClass(className){
     var liNode = document.createElement("li");   
     liNode.appendChild(starPicture);           // Create a <li> node
 
-    //append the clone (or star) to the parent
     totalNumOfStars  = 3;
     numOfStarsRequired = totalNumOfStars-countElementsByClass(className)
 
@@ -292,7 +288,11 @@ function countElementsByClass(className) {
 }
 
 
-
+/**
+ * 
+ *  Most important function
+ *  uses class from css to affect the behavior of the cards after clicked. 
+ */
 function delegateCardClickBehavior(event) {
 
   //  congratulateUser();
@@ -363,34 +363,10 @@ function congratulateUser() {
     }
     
 }
-
+//returns true if the class name of the card list matches, false otherwise
     function doesCardsMatch(card1,card2) {
         return card1.firstChild.classList[1]===card2.firstChild.classList[1];
     }
-
-   function updateClickedClassStatusToMatch(firstCard, secondCard) {
-        //change the correctly guessed cards to 'match' so they always show up
-        totalNumOfMatch++;
-        console.log("match");
-        firstCard.classList.remove("open");
-        firstCard.classList.add("match");
-
-        secondCard.classList.remove("open");
-        secondCard.classList.add("match");
-
-
-   }
-
-   function updateClickedClassStatusToIncorrectlyGuessed(firstCard, secondCard) {
-       //change the incorrectly guessed cards to not have 'match' so they go back to hide
-       setTimeout(function cardClose() {
-        firstCard.classList.remove('show');
-        secondCard.classList.remove('show');
-       }, 500);
-
-      
-
-   }
 
    document.addEventListener('DOMContentLoaded', function () {
     console.log('the DOM is ready to be interacted with!');
