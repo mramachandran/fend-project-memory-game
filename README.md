@@ -15,6 +15,7 @@
 
    Score: 
    * The player who finishes before 40 seconds gets all stars while the player who finishes before 80 seconds gets two stars. Otherwise the user gets only one star. 
+   * A modal message is displayed congratulation and inviting to play the game again.
 
 
 * [Contributing](#contributing)
