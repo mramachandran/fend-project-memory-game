@@ -3,7 +3,22 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
+   Card:
+   * Player selects one card at a time. The first card is kept open until when there is a match or incorrect card is opened.
+   * Cards that match are kept open but given a new color theme to indicate that they have been matched. 
+   * Cards that are incorrectly guessed are given a time to change to orange and exhibits "shake" and then closes back.
+   
+   Timer:
+   * A simple timer in minutes:seconds (mm:ss) starts when the user clikcs the program for the first time and then updates itself every second
+   * Timer stops when the user finishes the game. 
+   * Timer gets reset when reset icon is clicked or when the user wins and accepts to play again. 
+
+   Score: 
+   * The player who finishes before 40 seconds gets all stars while the player who finishes before 80 seconds gets two stars. Otherwise the user gets only one star. 
+
+
 * [Contributing](#contributing)
+    * Manoj Ramachanadran
 
 ## Instructions
 
