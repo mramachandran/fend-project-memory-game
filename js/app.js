@@ -324,12 +324,13 @@ function delegateCardClickBehavior(event) {
         console.log(totalNumOfMatch)
         console.log(totalNumOfCards/2)
         if(totalNumOfMatch === totalNumOfCards/2) {
+            stopTimer();
             setTimeout(function congrats() {
             //console.log("Congratulations!. You have successfully matched all the cards.");
             congratulateUser();
             },500)  
           
-
+           
         }
         
      }
@@ -352,7 +353,7 @@ function delegateCardClickBehavior(event) {
 function congratulateUser() {
 
     //create section for modal
-    stopTimer();
+   
     modalMessage = "Congratulations! " + "You won the game in " + getTimeElapsedInSeconds() + " seconds ( " + getNumClicks() + " moves ) and have been awarded " + countElementsByClass('fa fa-star') + " stars!"
     alert(modalMessage)
     if (confirm('Do you want to play again?')) {
