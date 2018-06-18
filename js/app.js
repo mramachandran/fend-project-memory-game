@@ -59,13 +59,37 @@ function shuffle(array) {
     return array;
 }
 
+function resetVariables() {
+    console.log("resetting variables")
+    numOfClicks = 0;
+    totalNumOfCards = 16;
+    totalNumOfMatch = 0;
+    firstClickClass  = "";
+    secondClickClass = "";
+    firstTarget = "";
+    secondTarget = "";
+    openCards = [];
+    vTimer = "";
+    minutes = 0;
+    seconds = 0;
+    time = 0;   
+    stopTime = 0;
+    timerIncrementHandle = 0;
+    resetTime = 0;
+}
+
+
 function resetDeck() {
-    stopTime = 1;
-    intiateCardShuffle();
-    createDeck();
     stopTimer();
-    //updatePlayerRanking(5);
-    //setTimeOut(resetTimer(),1000);
+    //intiateCardShuffle();
+    createDeck();
+    resetVariables();
+    resetStars();  
+    resetTimer();  
+}
+
+function resetStars() {
+    addElementsByClass('fa fa-star')
 }
 
 function resetClick() {
@@ -91,8 +115,6 @@ function updateHTMLNumberMessage() {
 }
 
 function startTimer() {
-    
-    
     //vTimer = "hello";
     console.log("starting timer");
     let score = document.getElementsByClassName('score-panel')[0];
@@ -124,12 +146,10 @@ function updateTimer() {
 
    console.log("updating timer " + stopTime);
    if (stopTime == 1) {
-       resetTimer();  
+       //resetTimer();  
        return;
    }
        
-    
-    
     timerIncrementHandle = setTimeout(function(){
         seconds++;
         if(seconds%60==0 & seconds > 0) {
@@ -161,6 +181,8 @@ function resetTimer() {
     seconds = 0;
     minutes = 0;
     vTimer = "00" + ":" + "00";
+    let span = document.getElementsByClassName('timer')[0];
+    span.innerHTML = vTimer;
 }
 
 function incrementNumClick() {
@@ -240,10 +262,34 @@ function updatePlayerRanking (removeStarAfterNSeconds) {
 
 function removeElementsByClass(className){
     var elements = document.getElementsByClassName(className);
-    if (elements.length > 0)
-    console.log(elements[0].remove())
+    if (elements.length > 1) //do not remove the last star
+        elements[0].remove()
+}
+
+function addElementsByClass(className){
+
+    let starPicture = document.createElement('i');
+    starPicture.className = "fa fa-star";
+
+    var liNode = document.createElement("li");   
+    liNode.appendChild(starPicture);           // Create a <li> node
+
+    //append the clone (or star) to the parent
+    totalNumOfStars  = 3;
+    numOfStarsRequired = totalNumOfStars-countElementsByClass(className)
+
+    console.log(numOfStarsRequired)
+    for (i = 0;i<numOfStarsRequired;i++) {
+         console.log(i)
+         document.getElementsByClassName('stars')[0].appendChild(liNode)
+         console.log("adding")
+    }
 }
   
+function countElementsByClass(className) {
+    var elements = document.getElementsByClassName(className);
+    return elements.length
+}
 
 
 
@@ -275,9 +321,15 @@ function delegateCardClickBehavior(event) {
 
         
         
+        console.log(totalNumOfMatch)
+        console.log(totalNumOfCards/2)
         if(totalNumOfMatch === totalNumOfCards/2) {
-            console.log("Congratulations!. You have successfully matched all the cards.");
+            setTimeout(function congrats() {
+            //console.log("Congratulations!. You have successfully matched all the cards.");
             congratulateUser();
+            },500)  
+          
+
         }
         
      }
@@ -296,33 +348,19 @@ function delegateCardClickBehavior(event) {
     }
 }
 
+
 function congratulateUser() {
 
     //create section for modal
-    alert("you got it!")
-    stopTime = 1;
-    /*
-    let modalDiv = document.createElement('div');
-    modalDiv.classList.add('modal');
-    document.appendChild(modalDiv);
-    
-    //Modal content 
-    let modalDivContent = document.createElement('div');
-    modalDivContent.classList.add('modal-content');
-    modalDiv.appendChild(modalDivContent);
-
-    // Get the modal
-    var modal = document.getElementById('modal');
-    modal.style.display = "block";
-    
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-        
+    stopTimer();
+    modalMessage = "Congratulations! " + "You won the game in " + getTimeElapsedInSeconds() + " seconds ( " + getNumClicks() + " moves ) and have been awarded " + countElementsByClass('fa fa-star') + " stars!"
+    alert(modalMessage)
+    if (confirm('Do you want to play again?')) {
+        resetDeck();
+    } else {
+        // Do nothing!
     }
-    */
+    
 }
 
     function doesCardsMatch(card1,card2) {
@@ -338,14 +376,7 @@ function congratulateUser() {
 
         secondCard.classList.remove("open");
         secondCard.classList.add("match");
-        if(totalNumOfMatch === totalNumOfCards/2) {
-            console.log("Congratulations!. You have successfully matched all the cards.");
-            //resetDeck();
-            alert("I want this to appear after the modal has opened!");
-            $('#code').on('shown.bs.modal', function (e) {
-                alert("I want this to appear after the modal has opened!");
-              })
-        }
+
 
    }
 
@@ -362,7 +393,7 @@ function congratulateUser() {
 
    document.addEventListener('DOMContentLoaded', function () {
     console.log('the DOM is ready to be interacted with!');
-    createDeck(); 
+    resetDeck(); 
    });
 
 
