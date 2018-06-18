@@ -169,9 +169,10 @@ function updateTimer() {
         //credit https://stackoverflow.com/questions/8043026/how-to-format-numbers-by-prepending-0-to-single-digit-numbers
          
         vTimer = minuteFormatter + ":" + secondFormatter;
+        
         span.innerHTML = vTimer;
         updateTimer();  
-        updatePlayerRanking(40); //remove starts if players take more than 40 seconds to complete
+        updatePlayerRanking(10); //remove starts if players take more than 40 seconds to complete
     }
     ,1000);
 }
@@ -184,7 +185,18 @@ function resetTimer() {
     minutes = 0;
     vTimer = "00" + ":" + "00";
     let span = document.getElementsByClassName('timer')[0];
-    span.innerHTML = vTimer;
+    let score = document.getElementsByClassName('score-panel')[0];
+    
+    if (span == null)  {
+        timer = document.createElement('span');
+        timer.classList.add('timer')
+        
+        timer.appendChild(document.createTextNode(vTimer));
+        score.appendChild(timer)
+    } else {
+        span.innerHTML = vTimer;
+    }
+    
 }
 
 //increments number of clicks as number of moves made by user
@@ -265,20 +277,17 @@ function removeElementsByClass(className){
 //when reset and if the previous session had lost some stars, resetting the game sets the number of stars back to 3
 function addElementsByClass(className){
 
-    let starPicture = document.createElement('i');
-    starPicture.className = "fa fa-star";
-
-    var liNode = document.createElement("li");   
-    liNode.appendChild(starPicture);           // Create a <li> node
-
+          // Create a <li> node
     totalNumOfStars  = 3;
     numOfStarsRequired = totalNumOfStars-countElementsByClass(className)
-
-    console.log(numOfStarsRequired)
     for (i = 0;i<numOfStarsRequired;i++) {
-         console.log(i)
+        let starPicture = document.createElement('i');
+        starPicture.className = "fa fa-star";
+    
+        let liNode = document.createElement("li");   
+        liNode.appendChild(starPicture); 
          document.getElementsByClassName('stars')[0].appendChild(liNode)
-         console.log("adding")
+
     }
 }
   
