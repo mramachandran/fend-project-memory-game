@@ -60,7 +60,7 @@ function shuffle(array) {
 }
 
 function resetVariables() {
-    console.log("resetting variables")
+    //console.log("resetting variables")
     numOfClicks = 0;
     totalNumOfCards = 16;
     totalNumOfMatch = 0;
@@ -78,11 +78,9 @@ function resetVariables() {
     resetTime = 0;
 }
 
-
-
 function resetDeck() {
     stopTimer();
-    //intiateCardShuffle();
+    intiateCardShuffle();
     createDeck();
     resetVariables();
     resetStars();  
@@ -120,7 +118,7 @@ function updateHTMLNumberMessage() {
 //starts the timer and updates it every second
 function startTimer() {
     //vTimer = "hello";
-    console.log("starting timer");
+    //console.log("starting timer");
     let score = document.getElementsByClassName('score-panel')[0];
     let span = document.getElementsByClassName('timer')[0];
 
@@ -146,7 +144,7 @@ function stopTimer() {
 //updates timer every one second
 function updateTimer() {
 
-   console.log("updating timer " + stopTime);
+   //console.log("updating timer " + stopTime);
    if (stopTime == 1) {
        //resetTimer();  
        return;
@@ -161,7 +159,7 @@ function updateTimer() {
 
         //let seconds = Math.floor(time/100);
 
-        console.log(seconds);
+        //console.log(seconds);
 
         let span = document.getElementsByClassName('timer')[0];
         let secondFormatter =  ("0" + seconds).slice(-2);
@@ -202,7 +200,7 @@ function resetTimer() {
 //increments number of clicks as number of moves made by user
 function incrementNumClick() {
     numOfClicks = numOfClicks + 1;
-    console.log("num of clicks = " + numOfClicks);
+    //console.log("num of clicks = " + numOfClicks);
     updateHTMLNumberMessage();
 }
 
@@ -254,13 +252,13 @@ function updatePlayerRanking (removeStarAfterNSeconds) {
     //remove a star if the player is taking more than 40 seconds
 
     timeElapsed = getTimeElapsedInSeconds()
-    console.log("updating stars @ second ..." + timeElapsed);
-    console.log("will remove stars after " + removeStarAfterNSeconds)
-    console.log()
+    //console.log("updating stars @ second ..." + timeElapsed);
+    //console.log("will remove stars after " + removeStarAfterNSeconds)
+    //console.log()
 
     if (timeElapsed >= removeStarAfterNSeconds && timeElapsed%removeStarAfterNSeconds == 0 )
     {
-        console.log("about to remove starts")
+        //console.log("about to remove starts")
         removeElementsByClass('fa fa-star')
     }
         
@@ -304,66 +302,72 @@ function countElementsByClass(className) {
  */
 function delegateCardClickBehavior(event) {
 
-  //  congratulateUser();
-  if(!event.target.classList.contains('card')) return;
-  incrementNumClick();
+  if(!event.target.classList.contains('card') || event.target.classList.contains("show") || event.target.classList.contains("match")) return;
+  console.log("proceeding...")
 
+  incrementNumClick();
   if(getNumClicks() == 1) startTimer();
  
-     
-   openCards.push(event.target);
-   event.target.classList.toggle('show');
-   //console.log(event.target.classList);
+    console.log(openCards.length);
+    console.log(event.target.classList.contains("show"))
 
-   if(openCards.length == 2) {
-    console.log(openCards[0].classList);
-    console.log(openCards[1].classList);
-     
-     if(doesCardsMatch(openCards[0],openCards[1])) {      
+    if(openCards.length <= 1) {
+        openCards.push(event.target);
+        event.target.classList.toggle('show');
+        console.log(openCards.length);
+    } else {
+        console.log("clicking the same open card..ignore!")
+    }
+
+    //console.log(openCards)
+    //console.log(openCards.length)
+
+   if(openCards.length == 2) {           
+     if(doesCardsMatch(openCards[0],openCards[1])) { 
+        setCardsToMatch(openCards)    
+     }
+     else {
+        setCardsToClose(openCards)    
+     }
+     openCards = []
+    }
+}
+
+function setCardsToMatch(openCards) {
         openCards[0].classList.remove('show');
         openCards[1].classList.remove('show');
         openCards[0].classList.add('match');
-        openCards[1].classList.add('match');  
-        
+        openCards[1].classList.add('match');              
         totalNumOfMatch++;
-        openCards = [];    
-
+        console.log("Total no. of matches - " + totalNumOfMatch)
+        openCards = [];   
         
-        
-        console.log(totalNumOfMatch)
-        console.log(totalNumOfCards/2)
         if(totalNumOfMatch === totalNumOfCards/2) {
             stopTimer();
             setTimeout(function congrats() {
-            //console.log("Congratulations!. You have successfully matched all the cards.");
             congratulateUser();
-            },500)  
-          
-           
+            },100)            
         }
-        
-     }
-     else {
-        setTimeout(function cardClose() {
+}
+
+function setCardsToClose(openCards) {
+    setTimeout(function cardClose() {
+        //setCardsToMatch(openCards)       
         openCards[0].classList.remove('show'); //remove show
         openCards[1].classList.remove('show');
         openCards[0].classList.remove('close'); 
         openCards[1].classList.remove('close'); 
-        openCards = [];       
-       }, 500);
+           
+       }, 100);
        openCards[0].classList.add('close'); 
        openCards[1].classList.add('close');
-     }
-     
-    }
 }
-
 
 function congratulateUser() {
 
     //create section for modal
    
-    modalMessage = "Congratulations! " + "You won the game in " + getTimeElapsedInSeconds() + " seconds ( " + getNumClicks() + " moves ) and have been awarded " + countElementsByClass('fa fa-star') + " stars!"
+    modalMessage = "Congratulations! " + "You won the game in " + getTimeElapsedInSeconds() + " seconds ( " + getNumClicks() + " moves ) and have been awarded " + countElementsByClass('fa fa-star') + " star(s)!"
     alert(modalMessage)
     if (confirm('Do you want to play again?')) {
         resetDeck();
@@ -378,7 +382,7 @@ function congratulateUser() {
     }
 
    document.addEventListener('DOMContentLoaded', function () {
-    console.log('the DOM is ready to be interacted with!');
+    //console.log('the DOM is ready to be interacted with!');
     resetDeck(); 
    });
 
